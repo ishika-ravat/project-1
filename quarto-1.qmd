@@ -4,3 +4,54 @@ author: "Ishika Ravat"
 format: html
 ---
 
+
+```{r}
+#| message: false
+library(tidyverse)
+library(palmerpenguins)
+```
+
+
+```{r}
+#| echo: false
+penguins
+```
+
+
+```{r}
+#| message: false
+#| warning: false
+#| echo: false
+# Create a polished ggplot using tidyverse + palmerpenguins
+library(ggplot2)
+
+penguins_clean <- penguins %>%
+	drop_na(flipper_length_mm, body_mass_g, species, sex)
+
+p <- penguins_clean %>%
+	ggplot(aes(x = flipper_length_mm, y = body_mass_g, color = species, shape = sex)) +
+	geom_jitter(width = 1, height = 30, size = 2.8, alpha = 0.9) +
+	geom_smooth(method = "lm", se = FALSE, linetype = "dashed", size = 0.8) +
+	scale_color_brewer(palette = "Set2") +
+	labs(
+		title = "Penguins: Flipper Length vs Body Mass",
+		subtitle = "Palmer Penguins dataset",
+		x = "Flipper length (mm)",
+		y = "Body mass (g)",
+		color = "Species",
+		shape = "Sex",
+		caption = "Data: palmerpenguins"
+	) +
+	theme_minimal(base_size = 14) +
+	theme(legend.position = "top", plot.title = element_text(face = "bold"))
+
+# Ensure plots directory exists and save
+if (!dir.exists("plots")) dir.create("plots")
+ggsave(filename = "plots/penguins-plot.png", plot = p, width = 8, height = 6, dpi = 300)
+
+p
+```
+
+
+
+```
